@@ -1,2 +1,6 @@
 ### Ctrl + Shift + H to choose working directory
 
+```{r}
+data <- matrix(scan("CH06PR05.txt"), ncol = 3, byrow = T)
+# scan 裡面是檔案名字，ncol 是資料column 的個數
+```
