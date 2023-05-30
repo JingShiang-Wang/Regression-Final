@@ -1,6 +1,49 @@
 ### Ctrl + Shift + H to choose working directory
 
 ```{r}
-data <- matrix(scan("CH06PR05.txt"), ncol = 3, byrow = T)
+Data <- matrix(scan("CH06PR05.txt"), ncol = 3, byrow = T)
 # scan 裡面是檔案名字，ncol 是資料column 的個數
+
+Data <- data.frame(Y = Data[, 1], X1 = Data[, 2], X2 = Data[, 3])
+# 將資料排成我們想要的樣子，注意"[, 1]" 代表第1個column
+
+Fm <- lm(Y ~ X1 + X2 , data = Data)
+# 做迴歸，注意需要的迴歸變數X 有哪些
+
+predict(Fm, newdata = data.frame(X1 = 7, X2 = 3))
+# 用剛剛的迴歸做預測，預測需要的X 放在data.frame 裡面
+
+summary(Fm)
+# 用來看迴歸裡面的一些資料
+S <- summary(Fm)
+# 把東西存起來後，可以在S 後面加上$ 來選擇要抓的資料，例如
+S$r.squared
+# 可以找出R^2
+
+plot(Data)
+# 畫scatter plot，也可以加上 abline(Fm$coefficients) 
+
+confint(Fm, level = 0.99)
+# 所有的信賴區間
+
+predict(Fm, data.frame(X1 = 7, X2 = 3), interval="confidence",level=0.95)
+predict(Fm, data.frame(X1 = 7, X2 = 3), interval="prediction",level=0.95)
+# Y_hat 的信賴區間跟預測區間
+
+CBwidth<-function(n,xh,alpha){
+sqrt(2*qf(1-alpha,2,n-2)*sum((Y-fitted(Fm))^2)/(n-2)*(1/n+(xh-mean(X))^2/((n-1)*var(X))))
+}
+# conf. band 的寬度，注意公式裡的內容
+
+anova(Fm)
+# ANOVA Table
+
+```
+
+```{r}
+qt(p = 0.95, df = 14)
+# 自由度 = 14 時，P-value 為0.05時的t值
+
+pt(q = 2, df = 14)
+# 自由度 = 14 時，2以下的總機率
 ```
