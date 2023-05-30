@@ -46,4 +46,7 @@ qt(p = 0.95, df = 14)
 
 pt(q = 2, df = 14)
 # 自由度 = 14 時，2以下的總機率
+
+cor(Data)
+# correlation matrix
 ```
