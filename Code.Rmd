@@ -61,3 +61,8 @@ qqnorm()
 
 
 ```
+
+```{r include=FALSE}
+rm(list = ls())
+```
+
