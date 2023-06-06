@@ -1,1 +1,73 @@
+# Data set : 24 data points
+```{r}
+ch3ta10<-matrix(scan("CH03TA10.txt"),ncol=2, byrow=T)
+dum <- data.frame(x=ch3ta10[,2], y=ch3ta10[,1])
+attach(dum)
+plot(x,y,xlab="pCi/g", ylab="# per second", main="Scatter plot")
+```
+```{r}
+fm <- lm(y~x, dum)
+summary(fm)
+anova(fm)
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(fm, las=1)
+```
+```{r}
+fm0 <- lm(y~x, dum[-24, ])       # remove case 24 from dum 
+summary(fm0)
+anova(fm0)
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(fm0, las=1)
+```
+# diagnostics 
+# F-value=229 on 1, 21 df's, p-value =0, so there is a significant regression  
+# relationship.
+# However, error variance appears to increase with the plutonium activity level.
+# Normal Q-Q plot suggests nonnormality (heavy tail)... but probably due to 
+# the unequal error variance....   
+# To get X^2_BP
+```{r}
+SQe<-resid(fm0)^2         # e^2
+dum1<-data.frame(x[-24],SQe)
+attach(dum1)
+X2BP<-(sum((fitted(lm(SQe~x[-24],dum1))-mean(SQe)  )^2)/2)/(sum(resid(fm0)^2)
+                                                            /(length(x[-24])))^2
+X2BP
+X2BP>qchisq(.95,1)       #?, if yes, reject the constant variance null hypothesis
+#or calculate the p-value of the test and reject if p-value < alpha
+1-pchisq(X2BP,1)
+```
+```{r}
+sfm0 <- update(fm0,sqrt(.)~.)   # a very useful R command.....
+summary(sfm0)
+anova(sfm0)
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(sfm0, las=1)  
+```
+```{r}
+sfm0s <- update(sfm0, .~sqrt(.))      # really take a note on this command.... #
+summary(sfm0s)
+anova(sfm0s)
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(sfm0s, las=1); 
+```
+```{r}
+SQe<-resid(sfm0s)^2         # e^2
+dum2<-data.frame(sqrt(x)[-24],SQe)
+attach(dum2)
+X2BP<-(sum((fitted(lm(SQe~sqrt(x)[-24],dum2))-mean(SQe)  )^2)/2)/(sum(resid(sfm0s)^2)
+                                                                  /(length(x[-24])))^2
+X2BP
+X2BP>qchisq(.95,1)       #?, if yes, reject the constant variance null hypothesis
+#or calculate the p-value of the test and reject if p-value < alpha
+1-pchisq(X2BP,1)
+```
 
+# So the nonconstancy of the error variance is not substantial.... say, "satisfactory" then 
+
+# The final fitted line: sqrt(y) = 0.0730 + 0.0573 sqrt(x) with R^2=0.945
+# F-value = 360.9 with p-value=0: fitted line is statistically significant.
+
+```{r}
+detach()
+```
