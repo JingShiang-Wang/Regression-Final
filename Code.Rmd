@@ -20,7 +20,7 @@ S <- summary(Fm)
 S$r.squared
 # 可以找出R^2
 
-plot(Data)
+plot(x = Fm$fitted.values, y = Fm$residuals, xlab = "Y_hat", ylab = "e")
 # 畫scatter plot，也可以加上 abline(Fm$coefficients) 
 
 confint(Fm, level = 0.99)
