@@ -10,6 +10,16 @@ Data <- data.frame(Y = Data[, 1], X1 = Data[, 2], X2 = Data[, 3])
 Fm <- lm(Y ~ X1 + X2 , data = Data)
 # 做迴歸，注意需要的迴歸變數X 有哪些
 
+opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
+plot(fm, las=1)
+# 看一下資料
+
+sfm0 <- update(fm0,sqrt(.)~.)
+＃ 將迴歸裡的Ｙ改成根號Ｙ
+
+sfm0s <- update(sfm0, .~sqrt(.))
+＃ 將迴歸裡的Ｘ改成根號Ｘ
+
 predict(Fm, newdata = data.frame(X1 = 7, X2 = 3))
 # 用剛剛的迴歸做預測，預測需要的X 放在data.frame 裡面
 
